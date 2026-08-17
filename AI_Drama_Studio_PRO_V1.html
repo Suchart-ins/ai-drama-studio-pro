@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Drama Studio PRO — V1</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans Thai",sans-serif;background:#11131a;color:#f4f4f5}
+.app{display:flex;min-height:100vh}.side{width:245px;background:#191c25;border-right:1px solid #30333d;padding:22px 14px;position:fixed;inset:0 auto 0 0}.brand{font-size:20px;font-weight:800;margin:0 8px 6px}.ver{color:#9ca3af;font-size:12px;margin:0 8px 22px}.nav button{width:100%;padding:12px 13px;margin:4px 0;border:0;border-radius:10px;background:transparent;color:#d1d5db;text-align:left;font-size:14px;cursor:pointer}.nav button.active,.nav button:hover{background:#2a2e39;color:white}.main{margin-left:245px;width:calc(100% - 245px);padding:28px;max-width:1300px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.top h1{margin:0;font-size:26px}.save{background:#f59e0b;color:#111;border:0;border-radius:9px;padding:11px 18px;font-weight:700;cursor:pointer}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:#1b1e27;border:1px solid #30333d;border-radius:14px;padding:18px}.card h2{font-size:17px;margin:0 0 14px}.full{grid-column:1/-1}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{background:#242833;border-radius:10px;padding:14px}.stat b{display:block;font-size:20px;margin-bottom:5px}.muted{color:#9ca3af;font-size:13px}label{display:block;font-size:13px;color:#cbd5e1;margin:12px 0 6px}input,textarea,select{width:100%;background:#11141b;color:#f4f4f5;border:1px solid #383c47;border-radius:9px;padding:11px;font-size:14px}textarea{min-height:100px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.btn{border:1px solid #3b404d;background:#272b35;color:white;padding:10px 14px;border-radius:9px;cursor:pointer}.btn.primary{background:#2563eb;border-color:#2563eb}.btn.danger{background:#7f1d1d;border-color:#7f1d1d}.char-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.char{background:#242833;border-radius:10px;padding:13px}.char b{display:block;margin-bottom:5px}.lock{color:#86efac;font-size:12px}.output{white-space:pre-wrap;background:#0d1016;border:1px solid #343844;border-radius:9px;padding:13px;min-height:150px;font-family:monospace;font-size:12px;line-height:1.6}.hidden{display:none}.notice{padding:11px 13px;background:#27231a;border:1px solid #6b5520;border-radius:9px;color:#fde68a;font-size:13px;margin-bottom:16px}@media(max-width:800px){.side{width:100%;height:auto;position:static;border-right:0;border-bottom:1px solid #30333d}.app{display:block}.main{margin:0;width:100%;padding:16px}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap;width:auto}.grid,.row,.char-list,.stats{grid-template-columns:1fr}.full{grid-column:auto}.top{gap:10px}.top h1{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="brand">🎬 AI Drama Studio</div><div class="ver">PRO • V1 Prototype</div>
+  <div class="nav">
+    <button class="active" onclick="show('dashboard',this)">🏠 Dashboard</button>
+    <button onclick="show('project',this)">📁 Project</button>
+    <button onclick="show('characters',this)">🎭 Characters</button>
+    <button onclick="show('story',this)">📖 Story</button>
+    <button onclick="show('scenes',this)">🎬 Scenes</button>
+    <button onclick="show('prompt',this)">✨ Prompt Generator</button>
+  </div>
+</aside>
+<main class="main">
+  <div class="top"><h1 id="title">Dashboard</h1><button class="save" onclick="saveProject()">💾 Save Project</button></div>
+
+  <section id="dashboard">
+    <div class="notice">V1 เน้น “เก็บข้อมูลโปรเจกต์ + Character Lock + Scene + สร้าง Prompt” ก่อน ยังไม่เชื่อม API สร้างวิดีโอโดยตรง</div>
+    <div class="card full"><h2>📊 Project Status</h2><div class="stats">
+      <div class="stat"><b id="sEpisodes">0</b><span class="muted">Episodes</span></div>
+      <div class="stat"><b id="sScenes">0</b><span class="muted">Scenes</span></div>
+      <div class="stat"><b id="sChars">0</b><span class="muted">Characters</span></div>
+      <div class="stat"><b id="sClips">0</b><span class="muted">Clips</span></div>
+    </div></div>
+    <div class="grid" style="margin-top:16px">
+      <div class="card"><h2>📌 Current Production</h2><div id="current" class="muted">ยังไม่มีข้อมูล</div></div>
+      <div class="card"><h2>🔒 Continuity</h2><p class="muted">Character Lock: <b class="lock">ACTIVE</b><br>Project State: <b class="lock">LOCAL SAVE</b><br>Flow limit: <b>10 seconds</b></p></div>
+    </div>
+  </section>
+
+  <section id="project" class="hidden">
+    <div class="card"><h2>📁 Project Setup</h2>
+      <label>Project Name</label><input id="pname" placeholder="เช่น รอยรักรอยพยาบาท">
+      <div class="row"><div><label>Season</label><input id="season" value="1"></div><div><label>Current Episode</label><input id="episode" value="1"></div></div>
+      <div class="row"><div><label>Current Scene</label><input id="scene" placeholder="เช่น 1.1"></div><div><label>Current Clip</label><input id="clip" placeholder="เช่น 1.1B"></div></div>
+      <label>Continuity Notes</label><textarea id="notes" placeholder="รายละเอียดที่ต้องคงไว้ เช่น Port ซ้าย / May ขวา / สบตากัน"></textarea>
+      <div class="actions"><button class="btn primary" onclick="saveProject()">บันทึก Project</button><button class="btn" onclick="loadProject()">โหลด Project</button><button class="btn danger" onclick="clearProject()">ล้างข้อมูล</button></div>
+    </div>
+  </section>
+
+  <section id="characters" class="hidden">
+    <div class="grid"><div class="card"><h2>🎭 Character Bible</h2>
+      <label>Name</label><input id="cname" placeholder="เช่น PORT">
+      <label>Appearance / Character Lock</label><textarea id="cdesc" placeholder="ใบหน้า ผม สีผม รูปร่าง เสื้อผ้า บุคลิก..."></textarea>
+      <div class="actions"><button class="btn primary" onclick="addCharacter()">+ เพิ่มตัวละคร</button></div>
+    </div>
+    <div class="card"><h2>🔒 Locked Characters</h2><div id="charList" class="char-list"></div></div></div>
+  </section>
+
+  <section id="story" class="hidden">
+    <div class="card"><h2>📖 Story Builder</h2>
+      <label>Story Title</label><input id="storyTitle" placeholder="รอยรักรอยพยาบาท">
+      <label>Genre</label><input id="genre" placeholder="ดราม่าความรัก / หักมุม / แก้แค้น">
+      <label>Story Overview</label><textarea id="overview" placeholder="ใส่ภาพรวมเรื่อง..."></textarea>
+      <label>Episode Outline</label><textarea id="outline" placeholder="Episode 1: ...&#10;Episode 2: ..."></textarea>
+      <div class="actions"><button class="btn primary" onclick="saveStory()">บันทึก Story</button></div>
+    </div>
+  </section>
+
+  <section id="scenes" class="hidden">
+    <div class="grid"><div class="card"><h2>🎬 Scene Builder</h2>
+      <div class="row"><div><label>Episode</label><input id="se" value="1"></div><div><label>Scene</label><input id="sn" value="1.1"></div></div>
+      <label>Location / Time</label><input id="loc" placeholder="Luxury Gala Ballroom / Night">
+      <label>Characters</label><input id="schars" placeholder="PORT, MAY">
+      <label>Blocking</label><input id="blocking" placeholder="PORT left facing right; MAY right facing left">
+      <label>Action & Emotion</label><textarea id="action"></textarea>
+      <label>Dialogue</label><textarea id="dialogue" placeholder="MAY: ...&#10;PORT: ..."></textarea>
+      <div class="actions"><button class="btn primary" onclick="addScene()">+ บันทึก Scene</button></div>
+    </div>
+    <div class="card"><h2>🎞️ Scene List</h2><div id="sceneList" class="muted">ยังไม่มีฉาก</div></div></div>
+  </section>
+
+  <section id="prompt" class="hidden">
+    <div class="card"><h2>✨ Prompt Generator</h2>
+      <label>Scene ID</label><input id="prScene" placeholder="1.1B">
+      <label>Speaker</label><select id="speaker"><option>PORT</option><option>MAY</option><option>WARIN</option><option>NAPHA</option></select>
+      <label>Dialogue</label><input id="prDialogue" placeholder='เช่น อืม...'>
+      <label>Duration (seconds)</label><input id="duration" type="number" min="1" max="10" value="8">
+      <label>Extra direction</label><textarea id="extra" placeholder="สบตากัน, กล้องนิ่ง, ห้ามสลับซ้ายขวา..."></textarea>
+      <div class="actions"><button class="btn primary" onclick="generatePrompt()">สร้าง Video Prompt</button></div>
+      <label>Generated Prompt</label><div id="output" class="output">Prompt จะแสดงตรงนี้</div>
+      <div class="actions"><button class="btn" onclick="copyPrompt()">📋 Copy Prompt</button></div>
+    </div>
+  </section>
+</main>
+</div>
+
+<script>
+const KEY="aiDramaStudioV1";
+let data=JSON.parse(localStorage.getItem(KEY)||'{"project":{},"characters":[],"stories":{},"scenes":[]}');
+
+function show(id,btn){document.querySelectorAll("main section").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));btn.classList.add("active");document.getElementById("title").textContent=btn.textContent.replace(/^\\S+\\s*/,"");refresh();}
+function saveProject(){data.project={name:val("pname"),season:val("season"),episode:val("episode"),scene:val("scene"),clip:val("clip"),notes:val("notes")};persist();alert("บันทึก Project แล้ว");}
+function loadProject(){let p=data.project;["pname","season","episode","scene","clip","notes"].forEach((id,i)=>{document.getElementById(id).value=[p.name,p.season,p.episode,p.scene,p.clip,p.notes][i]||""});refresh();}
+function clearProject(){if(confirm("ล้างข้อมูลทั้งหมดในโปรแกรม?")){localStorage.removeItem(KEY);location.reload()}}
+function addCharacter(){let n=val("cname").trim(),d=val("cdesc").trim();if(!n||!d)return alert("กรุณาใส่ชื่อตัวละครและ Character Lock");data.characters.push({name:n,desc:d,locked:true});val("cname","");val("cdesc","");persist();refresh()}
+function saveStory(){data.stories={title:val("storyTitle"),genre:val("genre"),overview:val("overview"),outline:val("outline")};persist();alert("บันทึก Story แล้ว")}
+function addScene(){let s={episode:val("se"),scene:val("sn"),location:val("loc"),characters:val("schars"),blocking:val("blocking"),action:val("action"),dialogue:val("dialogue")};data.scenes.push(s);persist();refresh();alert("บันทึก Scene แล้ว")}
+function generatePrompt(){
+let speaker=val("speaker"),d=val("prDialogue"),dur=Math.min(10,Math.max(1,Number(val("duration"))||8));
+let listener=data.characters.filter(c=>c.name.toUpperCase()!=speaker.toUpperCase()).map(c=>c.name).join(", ")||"the other character";
+let p=`${dur}-second vertical 9:16 cinematic video. Use the provided reference image as the visual continuity reference. Preserve the exact character identities, facial features, hairstyle, hair color, physique, clothing and positions from the reference image. ${speaker} is the ONLY character speaking and moves their mouth naturally in sync with the Thai dialogue: "${d}". ${listener} remains silent with the mouth closed and listens naturally. Maintain established eye contact and blocking throughout. Keep the camera stable, do not switch left and right positions, do not flip the image, and do not introduce new characters. Natural realistic movement, cinematic lighting, continuous appearance.`;
+document.getElementById("output").textContent=p}
+function copyPrompt(){navigator.clipboard?.writeText(document.getElementById("output").textContent);alert("คัดลอก Prompt แล้ว")}
+function val(id,v){if(v!==undefined){document.getElementById(id).value=v;return}return document.getElementById(id).value}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));refresh()}
+function refresh(){
+document.getElementById("sChars").textContent=data.characters.length;document.getElementById("sScenes").textContent=data.scenes.length;
+document.getElementById("sEpisodes").textContent=new Set(data.scenes.map(s=>s.episode)).size;
+document.getElementById("sClips").textContent=data.project.clip?1:0;
+let p=data.project;document.getElementById("current").innerHTML=p.name?`<b>${p.name}</b><br>Season ${p.season||1} • Episode ${p.episode||1} • Scene ${p.scene||"-"} • Clip ${p.clip||"-"}`:"ยังไม่มีข้อมูล";
+document.getElementById("charList").innerHTML=data.characters.length?data.characters.map((c,i)=>`<div class="char"><b>${c.name}</b><span class="lock">🔒 LOCKED</span><p class="muted">${c.desc}</p><button class="btn danger" onclick="removeChar(${i})">ลบ</button></div>`).join(""):"<span class='muted'>ยังไม่มีตัวละคร</span>";
+document.getElementById("sceneList").innerHTML=data.scenes.length?data.scenes.map((s,i)=>`<div class="char"><b>EP ${s.episode} • Scene ${s.scene}</b><p class="muted">${s.location}<br>${s.characters}<br>${s.blocking}</p></div>`).join(""):"ยังไม่มีฉาก";
+}
+function removeChar(i){data.characters.splice(i,1);persist()}
+loadProject();refresh();
+</script>
+</body>
+</html>
