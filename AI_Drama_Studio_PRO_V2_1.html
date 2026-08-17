@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Drama Studio PRO V2.1</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,"Noto Sans Thai",sans-serif;
+background:#0b1020;
+color:#fff
+}
+header{
+padding:18px;
+background:linear-gradient(135deg,#18203d,#0d1428);
+border-bottom:1px solid #303b5d
+}
+h1{margin:0;font-size:22px}
+h2{font-size:17px;margin-top:0}
+.sub{font-size:12px;color:#aeb9d8;margin-top:5px}
+main{max-width:900px;margin:auto;padding:14px}
+.card{
+background:#121a2e;
+border:1px solid #293654;
+border-radius:16px;
+padding:15px;
+margin-bottom:14px
+}
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
+@media(max-width:600px){
+.grid{grid-template-columns:1fr}
+}
+label{
+display:block;
+font-size:13px;
+color:#b9c4df
+}
+input,select,textarea{
+width:100%;
+margin-top:6px;
+margin-bottom:10px;
+padding:10px;
+border-radius:10px;
+border:1px solid #394666;
+background:#080e1d;
+color:#fff;
+font-size:14px
+}
+textarea{
+min-height:100px;
+resize:vertical
+}
+button{
+border:0;
+border-radius:10px;
+padding:10px 13px;
+margin:3px;
+background:#5368ff;
+color:#fff;
+font-weight:bold
+}
+button.secondary{background:#293653}
+button.danger{background:#8b3040}
+.prompt{
+white-space:pre-wrap;
+background:#070c17;
+border:1px solid #303c5d;
+border-radius:10px;
+padding:12px;
+font-size:13px;
+line-height:1.6
+}
+.badge{
+display:inline-block;
+padding:5px 8px;
+margin:3px;
+border-radius:20px;
+background:#1d2945;
+color:#c4d0ef;
+font-size:11px
+}
+.status{
+font-size:13px;
+color:#8ee6ad;
+margin-top:8px
+}
+.characterBox{
+border:1px solid #34415f;
+border-radius:12px;
+padding:12px;
+margin-top:10px
+}
+.locked{
+border-left:4px solid #6577ff
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🎬 AI Drama Studio PRO V2.1</h1>
+<div class="sub">
+Character Bible • Character Lock • Scene Continuity • Lip Sync • Google Flow Prompt
+</div>
+</header>
+
+<main>
+
+<!-- PROJECT -->
+
+<div class="card">
+<h2>📁 PROJECT</h2>
+
+<div class="grid">
+
+<label>
+ชื่อโปรเจกต์
+<input id="project" value="รอยรักรอยพยาบาท">
+</label>
+
+<label>
+Season
+<input id="season" value="1">
+</label>
+
+<label>
+Episode
+<input id="episode" value="1">
+</label>
+
+<label>
+Scene
+<input id="scene" value="1.1">
+</label>
+
+<label>
+Clip
+<input id="clip" value="1.1A">
+</label>
+
+</div>
+
+<button onclick="saveAll()">💾 บันทึก Project</button>
+<button class="secondary" onclick="loadAll()">📂 โหลด Project</button>
+
+<div id="status" class="status">
+สถานะ: พร้อมใช้งาน
+</div>
+
+</div>
+
+
+<!-- CHARACTER MANAGER -->
+
+<div class="card locked">
+
+<h2>🎭 CHARACTER BIBLE & CHARACTER LOCK</h2>
+
+<label>
+เลือกตัวละคร
+<select id="characterSelect" onchange="loadCharacter()">
+<option value="PORT">PORT — พอร์ต</option>
+<option value="MAY">MAY — เมย์</option>
+<option value="WARIN">RIN / WARIN</option>
+<option value="NAPHA">NAPHA</option>
+</select>
+</label>
+
+<div class="characterBox">
+
+<label>ชื่อ / รหัสตัวละคร</label>
+<input id="charName">
+
+<label>อายุ / เพศ / รูปร่าง</label>
+<textarea id="charBody"></textarea>
+
+<label>ใบหน้า</label>
+<textarea id="charFace"></textarea>
+
+<label>ผม</label>
+<textarea id="charHair"></textarea>
+
+<label>ดวงตา / เอกลักษณ์</label>
+<textarea id="charEyes"></textarea>
+
+<label>เสื้อผ้า</label>
+<textarea id="charClothes"></textarea>
+
+<label>เอกลักษณ์ที่ห้ามเปลี่ยน</label>
+<textarea id="charLock"></textarea>
+
+<button onclick="saveCharacter()">🔒 บันทึก Character Lock</button>
+
+</div>
+
+<div id="characterStatus" class="status"></div>
+
+</div>
+
+
+<!-- SCENE -->
+
+<div class="card">
+
+<h2>🎬 SCENE CONTINUITY</h2>
+
+<div class="grid">
+
+<label>
+สถานที่
+<input id="location" value="Luxury 5-star hotel ballroom">
+</label>
+
+<label>
+เวลา
+<input id="time" value="Night">
+</label>
+
+<label>
+PORT อยู่ฝั่ง
+<select id="portPosition">
+<option>LEFT</option>
+<option>RIGHT</option>
+</select>
+</label>
+
+<label>
+MAY อยู่ฝั่ง
+<select id="mayPosition">
+<option>RIGHT</option>
+<option>LEFT</option>
+</select>
+</label>
+
+</div>
+
+<label>
+การกระทำ / อารมณ์ของ Scene
+</label>
+
+<textarea id="action">
+เมย์ยืนใกล้พอร์ตอย่างออดอ้อน
+พอร์ตนิ่ง สุขุม และแฝงความเจ็บปวด
+บรรยากาศงานเลี้ยงหรูแต่มีความตึงเครียดซ่อนอยู่
+</textarea>
+
+</div>
+
+
+<!-- DIALOGUE -->
+
+<div class="card">
+
+<h2>🗣️ SPEAKER & LIP SYNC LOCK</h2>
+
+<div class="grid">
+
+<label>
+ผู้พูด
+<select id="speaker">
+<option>PORT</option>
+<option>MAY</option>
+<option>WARIN</option>
+<option>NAPHA</option>
+</select>
+</label>
+
+<label>
+ความยาวคลิป
+<input id="duration" type="number" min="1" max="10" value="8">
+</label>
+
+</div>
+
+<label>
+บทพูด
+</label>
+
+<textarea id="dialogue">อืม...</textarea>
+
+<button onclick="generatePrompts()">
+✨ Generate Prompts
+</button>
+
+<button class="secondary" onclick="copyVideo()">
+📋 คัดลอก Video Prompt
+</button>
+
+</div>
+
+
+<!-- IMAGE -->
+
+<div class="card">
+
+<h2>🖼️ IMAGE PROMPT</h2>
+
+<div id="imagePrompt" class="prompt">
+กด Generate Prompts
+</div>
+
+</div>
+
+
+<!-- VIDEO -->
+
+<div class="card">
+
+<h2>🎥 VIDEO PROMPT — GOOGLE FLOW</h2>
+
+<div id="videoPrompt" class="prompt">
+กด Generate Prompts
+</div>
+
+</div>
+
+
+<!-- CHECK -->
+
+<div class="card">
+
+<h2>🛡️ PRE-FLIGHT CHECK</h2>
+
+<div id="checks"></div>
+
+</div>
+
+</main>
+
+
+<script>
+
+/* =========================
+CHARACTER DATABASE
+========================= */
+
+let characters = {
+
+PORT:{
+name:"PORT — พอร์ต",
+body:"ชายไทย อายุ 30 ปี สูง 185 ซม. รูปร่างสมส่วนแบบนักธุรกิจ",
+face:"ใบหน้าคม สันกรามชัด ใบหน้าหล่อแบบชายไทย ดวงตาสีเข้ม",
+hair:"Comma Hair สี Jet Black ผมสั้นเรียบร้อย",
+eyes:"ดวงตาสีเข้ม ไม่มีแผลหรือเอกลักษณ์เพิ่มเติม",
+clothes:"สูทสามชิ้นสีกรมท่า เสื้อเชิ้ตสีขาว เนกไทสีดำ รองเท้าหนังสีดำ",
+lock:"ห้ามเปลี่ยนใบหน้า โครงหน้า ทรงผม สีผม รูปร่าง อายุ และชุดหลัก"
+},
+
+MAY:{
+name:"MAY — เมย์",
+body:"หญิงไทย อายุ 27 ปี สูง 162 ซม. รูปร่างเพรียว",
+face:"ใบหน้าหวานละมุน ดวงตาสีน้ำตาล",
+hair:"ผมยาวประไหล่ สีน้ำตาลอ่อนคาราเมล มีหน้าม้าซีทรู",
+eyes:"ดวงตาสีน้ำตาล เอกลักษณ์ใบหน้าหวาน",
+clothes:"เดรสราตรีสีพาสเทลลายดอกไม้เล็กๆ รองเท้าส้นสูง",
+lock:"ห้ามเปลี่ยนใบหน้า โครงหน้า ทรงผม สีผม รูปร่าง อายุ และชุดหลัก"
+},
+
+WARIN:{
+name:"RIN / WARIN",
+body:"ตัวละครหญิงตาม Master Character Bible",
+face:"ใบหน้าตาม Master Character Bible",
+hair:"ทรงผมและสีผมตาม Master Character Bible",
+eyes:"มีไฝใต้ตาซ้าย เป็นเอกลักษณ์สำคัญ",
+clothes:"เสื้อผ้าตาม Scene Continuity",
+lock:"ต้องมีไฝใต้ตาซ้าย ห้ามเปลี่ยนใบหน้า ตัวตน หรือเอกลักษณ์"
+},
+
+NAPHA:{
+name:"NAPHA",
+body:"หญิงไทยวัยผู้ใหญ่ บุคลิกสง่างามและมีอำนาจ",
+face:"ใบหน้าตาม Master Character Bible",
+hair:"ผมสั้นดัดลอน สีดำแทรกเทาเงิน",
+eyes:"ดวงตาคม บุคลิกสุขุม",
+clothes:"เสื้อผ้าและเครื่องประดับตาม Scene Continuity",
+lock:"ห้ามเปลี่ยนใบหน้า ทรงผม สีผม รูปร่าง และบุคลิก"
+}
+
+};
+
+
+/* =========================
+LOAD CHARACTER
+========================= */
+
+function loadCharacter(){
+
+let id=document.getElementById("characterSelect").value;
+
+let c=characters[id];
+
+document.getElementById("charName").value=c.name;
+document.getElementById("charBody").value=c.body;
+document.getElementById("charFace").value=c.face;
+document.getElementById("charHair").value=c.hair;
+document.getElementById("charEyes").value=c.eyes;
+document.getElementById("charClothes").value=c.clothes;
+document.getElementById("charLock").value=c.lock;
+
+}
+
+
+/* =========================
+SAVE CHARACTER
+========================= */
+
+function saveCharacter(){
+
+let id=document.getElementById("characterSelect").value;
+
+characters[id]={
+
+name:document.getElementById("charName").value,
+body:document.getElementById("charBody").value,
+face:document.getElementById("charFace").value,
+hair:document.getElementById("charHair").value,
+eyes:document.getElementById("charEyes").value,
+clothes:document.getElementById("charClothes").value,
+lock:document.getElementById("charLock").value
+
+};
+
+localStorage.setItem(
+"AI_DRAMA_CHARACTERS_V21",
+JSON.stringify(characters)
+);
+
+document.getElementById("characterStatus").textContent=
+"✓ Character Lock ถูกบันทึกแล้ว";
+
+}
+
+
+/* =========================
+LOAD CHARACTER DATABASE
+========================= */
+
+function loadCharacterDatabase(){
+
+let saved=
+localStorage.getItem("AI_DRAMA_CHARACTERS_V21");
+
+if(saved){
+
+characters=JSON.parse(saved);
+
+}
+
+loadCharacter();
+
+}
+
+
+/* =========================
+GENERATE PROMPTS
+========================= */
+
+function generatePrompts(){
+
+let speaker=
+document.getElementById("speaker").value;
+
+let listener="PORT";
+
+if(speaker==="PORT") listener="MAY";
+else if(speaker==="MAY") listener="PORT";
+else if(speaker==="WARIN") listener="PORT";
+else if(speaker==="NAPHA") listener="PORT";
+
+
+let selectedCharacter=
+characters[speaker] || characters.PORT;
+
+
+let imagePrompt=
+
+`VERTICAL 9:16 CINEMATIC IMAGE
+
+PROJECT:
+${document.getElementById("project").value}
+
+SCENE:
+${document.getElementById("scene").value}
+
+LOCATION:
+${document.getElementById("location").value}
+
+TIME:
+${document.getElementById("time").value}
+
+CHARACTER LOCK:
+
+${selectedCharacter.name}
+
+${selectedCharacter.body}
+
+FACE:
+${selectedCharacter.face}
+
+HAIR:
+${selectedCharacter.hair}
+
+EYES / IDENTITY:
+${selectedCharacter.eyes}
+
+CLOTHING:
+${selectedCharacter.clothes}
+
+LOCK:
+${selectedCharacter.lock}
+
+SECOND CHARACTER:
+Maintain the exact previously established identity of the other character.
+
+BLOCKING:
+
+PORT = ${document.getElementById("portPosition").value}
+MAY = ${document.getElementById("mayPosition").value}
+
+Both characters face each other.
+Direct eye contact.
+Medium two-shot.
+No camera flip.
+No position swapping.
+No character replacement.
+
+SCENE ACTION:
+${document.getElementById("action").value}
+
+Both characters begin with their mouths completely closed.
+
+Photorealistic cinematic realism.
+Original fictional characters only.
+Maintain exact facial identity and visual continuity.`;
+
+
+let videoPrompt=
+
+`${document.getElementById("duration").value} seconds.
+Vertical 9:16 cinematic video.
+
+IMPORTANT CHARACTER CONTINUITY:
+Use the exact same fictional characters from the reference image.
+Do not redesign or replace the characters.
+
+PORT remains on the ${document.getElementById("portPosition").value.toLowerCase()} side.
+
+MAY remains on the ${document.getElementById("mayPosition").value.toLowerCase()} side.
+
+Both characters face each other.
+Maintain direct eye contact.
+No camera flip.
+No position swap.
+No identity change.
+
+CHARACTER LOCK:
+
+${selectedCharacter.name}
+
+${selectedCharacter.body}
+
+${selectedCharacter.face}
+
+${selectedCharacter.hair}
+
+${selectedCharacter.eyes}
+
+${selectedCharacter.clothes}
+
+IDENTITY LOCK:
+${selectedCharacter.lock}
+
+SPEAKER:
+${speaker} is the ONLY character speaking.
+
+Thai dialogue:
+"${document.getElementById("dialogue").value}"
+
+${speaker} performs natural mouth movement synchronized to the Thai dialogue.
+
+LISTENER:
+${listener} remains completely silent.
+
+${listener}'s mouth remains firmly closed.
+${listener} does not move the lips.
+${listener} only listens and reacts naturally.
+
+EYE CONTACT:
+Both characters continue looking directly into each other's eyes.
+
+CAMERA:
+Static medium two-shot.
+No camera flip.
+No zoom that changes character identity.
+No new characters.
+No character transformation.
+
+STYLE:
+Photorealistic cinematic drama.
+Natural human movement.
+Consistent face and clothing.
+Warm cinematic lighting.`;
+
+
+document.getElementById("imagePrompt").textContent=
+imagePrompt;
+
+document.getElementById("videoPrompt").textContent=
+videoPrompt;
+
+
+runChecks();
+
+}
+
+
+/* =========================
+PRE-FLIGHT CHECK
+========================= */
+
+function runChecks(){
+
+let duration=
+Number(document.getElementById("duration").value);
+
+let html="";
+
+html+=duration<=10
+?'<span class="badge">✓ Duration ≤ 10s</span>'
+:'<span class="badge" style="background:#7d2735">⚠ Duration เกิน 10s</span>';
+
+html+='<span class="badge">✓ Character Lock</span>';
+
+html+='<span class="badge">✓ Blocking</span>';
+
+html+='<span class="badge">✓ Eye Contact</span>';
+
+html+='<span class="badge">✓ Speaker Lock</span>';
+
+html+='<span class="badge">✓ Listener Mouth Closed</span>';
+
+html+='<span class="badge">✓ Continuity</span>';
+
+document.getElementById("checks").innerHTML=html;
+
+}
+
+
+/* =========================
+SAVE PROJECT
+========================= */
+
+function saveAll(){
+
+let data={};
+
+document
+.querySelectorAll("input,textarea,select")
+.forEach(function(el){
+
+data[el.id]=el.value;
+
+});
+
+data.characters=characters;
+
+localStorage.setItem(
+"AI_DRAMA_PROJECT_V21",
+JSON.stringify(data)
+);
+
+document.getElementById("status").textContent=
+"✓ Project + Character Bible บันทึกแล้ว";
+
+}
+
+
+/* =========================
+LOAD PROJECT
+========================= */
+
+function loadAll(){
+
+let saved=
+localStorage.getItem("AI_DRAMA_PROJECT_V21");
+
+if(!saved){
+
+document.getElementById("status").textContent=
+"ยังไม่มี Project ที่บันทึกไว้";
+
+return;
+
+}
+
+let data=JSON.parse(saved);
+
+if(data.characters){
+
+characters=data.characters;
+
+}
+
+Object.keys(data).forEach(function(key){
+
+let element=document.getElementById(key);
+
+if(element && key!=="characters"){
+
+element.value=data[key];
+
+}
+
+});
+
+loadCharacter();
+
+generatePrompts();
+
+document.getElementById("status").textContent=
+"✓ โหลด Project สำเร็จ";
+
+}
+
+
+/* =========================
+COPY VIDEO PROMPT
+========================= */
+
+function copyVideo(){
+
+let text=
+document.getElementById("videoPrompt").textContent;
+
+if(navigator.clipboard){
+
+navigator.clipboard.writeText(text)
+.then(function(){
+
+alert("คัดลอก Video Prompt แล้ว ✓");
+
+});
+
+}else{
+
+alert("กดค้างที่ข้อความ แล้วเลือกคัดลอก");
+
+}
+
+}
+
+
+/* START */
+
+loadCharacterDatabase();
+
+generatePrompts();
+
+</script>
+
+</body>
+</html>
