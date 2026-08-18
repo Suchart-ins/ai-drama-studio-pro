@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Drama Studio PRO V3</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial,"Noto Sans Thai",sans-serif;
+background:#080d19;
+color:#fff
+}
+
+header{
+padding:18px;
+background:linear-gradient(135deg,#18254a,#0b1225);
+border-bottom:1px solid #33415f
+}
+
+h1{margin:0;font-size:23px}
+.sub{font-size:12px;color:#aeb9d8;margin-top:5px}
+
+main{
+max-width:950px;
+margin:auto;
+padding:14px
+}
+
+.card{
+background:#111a2d;
+border:1px solid #2c3a59;
+border-radius:16px;
+padding:16px;
+margin-bottom:14px
+}
+
+h2{font-size:18px;margin-top:0}
+h3{font-size:15px}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
+
+@media(max-width:650px){
+.grid{grid-template-columns:1fr}
+}
+
+label{
+display:block;
+font-size:13px;
+color:#bac5df
+}
+
+input,select,textarea{
+width:100%;
+margin-top:6px;
+margin-bottom:10px;
+padding:11px;
+border-radius:10px;
+border:1px solid #3b4968;
+background:#070c17;
+color:#fff;
+font-size:14px
+}
+
+textarea{
+min-height:90px;
+resize:vertical
+}
+
+button{
+border:0;
+border-radius:10px;
+padding:11px 14px;
+margin:3px;
+background:#536cff;
+color:white;
+font-weight:bold;
+cursor:pointer
+}
+
+button.secondary{background:#293754}
+button.success{background:#237a55}
+button.warning{background:#8a6327}
+
+.prompt{
+white-space:pre-wrap;
+background:#060a13;
+border:1px solid #303d5c;
+border-radius:11px;
+padding:13px;
+font-size:13px;
+line-height:1.65
+}
+
+.badge{
+display:inline-block;
+padding:6px 9px;
+margin:3px;
+border-radius:20px;
+background:#202d4a;
+font-size:11px
+}
+
+.good{color:#8de5ac}
+.warn{color:#ffd276}
+.error{color:#ff9292}
+
+.lock{
+border-left:4px solid #6578ff
+}
+
+.reference{
+border:1px solid #35425f;
+border-radius:12px;
+padding:12px
+}
+
+.reference img{
+display:none;
+width:100%;
+max-height:220px;
+object-fit:contain;
+margin-top:8px;
+border-radius:10px;
+background:#050811
+}
+
+.flowbox{
+border:1px solid #42557d;
+background:#0b1325;
+border-radius:12px;
+padding:14px
+}
+
+.status{
+font-size:13px;
+margin-top:8px
+}
+
+.step{
+font-weight:bold;
+color:#9db0ff
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🎬 AI Drama Studio PRO V3</h1>
+<div class="sub">
+Production Console • Character Master • Scene Master • Clip Builder • Flow Package
+</div>
+</header>
+
+<main>
+
+<!-- PROJECT -->
+
+<div class="card">
+
+<h2>📁 1. PROJECT MASTER</h2>
+
+<div class="grid">
+
+<label>
+Project
+<input id="project" value="รอยรักรอยพยาบาท">
+</label>
+
+<label>
+Season
+<input id="season" value="1">
+</label>
+
+<label>
+Episode
+<input id="episode" value="1">
+</label>
+
+<label>
+Scene
+<input id="scene" value="1.1">
+</label>
+
+<label>
+Clip
+<input id="clip" value="1.1A">
+</label>
+
+</div>
+
+<button onclick="saveProject()">💾 SAVE PROJECT</button>
+<button class="secondary" onclick="loadProject()">📂 LOAD PROJECT</button>
+
+<div id="projectStatus" class="status good">
+พร้อมสร้าง Project
+</div>
+
+</div>
+
+
+<!-- CHARACTER MASTER -->
+
+<div class="card lock">
+
+<h2>🔒 2. CHARACTER MASTER</h2>
+
+<p class="warn">
+Reference ของตัวละครเป็นข้อมูลหลัก ห้ามเปลี่ยนโดยไม่ตั้งใจ
+</p>
+
+<div class="grid">
+
+<div class="reference">
+
+<h3>PORT — พอร์ต</h3>
+
+<input
+type="file"
+id="portImage"
+accept="image/*"
+onchange="loadImage('PORT')">
+
+<img id="portPreview">
+
+<div id="portRefStatus">
+⚪ ยังไม่มี Master Reference
+</div>
+
+<label>Character ID</label>
+<input id="portID" value="PORT">
+
+<label>รายละเอียด</label>
+<textarea id="portBible">ชายไทย อายุ 30 ปี สูง 185 ซม. รูปร่างสมส่วนแบบนักธุรกิจ
+ใบหน้าคม สันกรามชัด ดวงตาสีเข้ม
+Comma Hair สี Jet Black
+สูทสามชิ้นสีกรมท่า เสื้อเชิ้ตสีขาว เนกไทสีดำ</textarea>
+
+</div>
+
+
+<div class="reference">
+
+<h3>MAY — เมย์</h3>
+
+<input
+type="file"
+id="mayImage"
+accept="image/*"
+onchange="loadImage('MAY')">
+
+<img id="mayPreview">
+
+<div id="mayRefStatus">
+⚪ ยังไม่มี Master Reference
+</div>
+
+<label>Character ID</label>
+<input id="mayID" value="MAY">
+
+<label>รายละเอียด</label>
+<textarea id="mayBible">หญิงไทย อายุ 27 ปี สูง 162 ซม. รูปร่างเพรียว
+ใบหน้าหวานละมุน ดวงตาสีน้ำตาล
+ผมยาวประไหล่ สีน้ำตาลอ่อนคาราเมล มีหน้าม้าซีทรู
+เดรสราตรีสีพาสเทลลายดอกไม้เล็กๆ รองเท้าส้นสูง</textarea>
+
+</div>
+
+</div>
+
+<button onclick="saveCharacters()">
+🔒 LOCK CHARACTERS
+</button>
+
+<div id="characterStatus" class="status"></div>
+
+</div>
+
+
+<!-- SCENE MASTER -->
+
+<div class="card">
+
+<h2>🎬 3. SCENE MASTER</h2>
+
+<div class="grid">
+
+<label>
+Scene Name
+<input id="sceneName" value="งานเลี้ยงแห่งความสำเร็จ">
+</label>
+
+<label>
+Location
+<input id="location" value="Luxury 5-star hotel ballroom">
+</label>
+
+<label>
+Time
+<input id="time" value="Night">
+</label>
+
+<label>
+Lighting
+<input id="lighting" value="Warm elegant cinematic lighting">
+</label>
+
+<label>
+PORT Position
+<select id="portPosition">
+<option>LEFT</option>
+<option>RIGHT</option>
+</select>
+</label>
+
+<label>
+MAY Position
+<select id="mayPosition">
+<option>RIGHT</option>
+<option>LEFT</option>
+</select>
+</label>
+
+</div>
+
+<label>Scene Continuity</label>
+
+<textarea id="continuity">PORT และ MAY ใช้รูปลักษณ์และเสื้อผ้าตาม Character Master
+ยืนใกล้กันในงานเลี้ยง
+ทั้งสองหันหน้าเข้าหากัน
+บรรยากาศภายนอกดูหรูหรา แต่บทสนทนามีความตึงเครียดซ่อนอยู่</textarea>
+
+</div>
+
+
+<!-- CLIP BUILDER -->
+
+<div class="card">
+
+<h2>🎥 4. CLIP BUILDER</h2>
+
+<div class="grid">
+
+<label>
+Speaker
+<select id="speaker">
+<option>MAY</option>
+<option>PORT</option>
+</select>
+</label>
+
+<label>
+Duration
+<select id="duration">
+<option value="8">8 seconds</option>
+<option value="6">6 seconds</option>
+<option value="4">4 seconds</option>
+<option value="10">10 seconds</option>
+</select>
+</label>
+
+<label>
+Aspect Ratio
+<select id="ratio">
+<option>9:16</option>
+<option>16:9</option>
+</select>
+</label>
+
+<label>
+Camera
+<select id="camera">
+<option>Medium Two-Shot</option>
+<option>Medium Close-Up</option>
+<option>Close-Up</option>
+<option>Over-The-Shoulder</option>
+</select>
+</label>
+
+</div>
+
+<label>Thai Dialogue</label>
+
+<textarea id="dialogue">พอร์ตคะ คืนนี้คุณพ่อจะประกาศเรื่องงานหมั้นของเรา</textarea>
+
+<label>Performance / Emotion</label>
+
+<textarea id="performance">พูดอย่างเป็นธรรมชาติ น้ำเสียงอ่อนโยนแต่มีความกดดันซ่อนอยู่
+การเคลื่อนไหวเล็กน้อยแบบมนุษย์จริง
+มีการกะพริบตาและขยับศีรษะตามธรรมชาติ</textarea>
+
+<button onclick="buildClip()">
+🎬 BUILD CLIP PACKAGE
+</button>
+
+</div>
+
+
+<!-- REFERENCE PACKAGE -->
+
+<div class="card">
+
+<h2>🖼️ 5. REFERENCE PACKAGE</h2>
+
+<div id="referencePackage" class="flowbox">
+สร้าง Clip Package ก่อน
+</div>
+
+</div>
+
+
+<!-- PROMPT -->
+
+<div class="card">
+
+<h2>📝 6. FLOW PROMPT</h2>
+
+<div id="flowPrompt" class="prompt">
+สร้าง Clip Package ก่อน
+</div>
+
+<button onclick="copyPrompt()">
+📋 COPY FLOW PROMPT
+</button>
+
+<button class="secondary" onclick="openFlow()">
+↗️ OPEN GOOGLE FLOW
+</button>
+
+</div>
+
+
+<!-- CONTINUITY -->
+
+<div class="card">
+
+<h2>🔗 7. CONTINUITY CHECK</h2>
+
+<div id="continuityCheck">
+ยังไม่ได้ตรวจ
+</div>
+
+</div>
+
+
+<!-- PRODUCTION -->
+
+<div class="card">
+
+<h2>📋 8. PRODUCTION TRACKER</h2>
+
+<div class="grid">
+
+<label>
+Clip Status
+<select id="clipStatus">
+<option>⚪ NOT STARTED</option>
+<option>🟡 READY</option>
+<option>🔵 GENERATED</option>
+<option>🟢 APPROVED</option>
+<option>🔴 NEEDS REVISION</option>
+</select>
+</label>
+
+<label>
+Take
+<input id="take" value="1">
+</label>
+
+</div>
+
+<button class="success" onclick="saveClipStatus()">
+💾 SAVE CLIP STATUS
+</button>
+
+<div id="tracker" class="status"></div>
+
+</div>
+
+
+<!-- FINAL CHECK -->
+
+<div class="card">
+
+<h2>🛡️ 9. PRE-FLIGHT</h2>
+
+<div id="preflight">
+ยังไม่ได้สร้าง Package
+</div>
+
+</div>
+
+</main>
+
+
+<script>
+
+/* =====================================================
+STATE
+===================================================== */
+
+let state={
+portImage:"",
+mayImage:"",
+clipBuilt:false
+};
+
+
+/* =====================================================
+IMAGE STORAGE
+===================================================== */
+
+function loadImage(character){
+
+let input=
+character==="PORT"
+?document.getElementById("portImage")
+:document.getElementById("mayImage");
+
+let file=input.files[0];
+
+if(!file)return;
+
+let reader=new FileReader();
+
+reader.onload=function(e){
+
+let img=new Image();
+
+img.onload=function(){
+
+let max=800;
+
+let scale=
+Math.min(
+1,
+max/img.width,
+max/img.height
+);
+
+let canvas=
+document.createElement("canvas");
+
+canvas.width=
+Math.round(img.width*scale);
+
+canvas.height=
+Math.round(img.height*scale);
+
+let ctx=
+canvas.getContext("2d");
+
+ctx.drawImage(
+img,
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+let data=
+canvas.toDataURL(
+"image/jpeg",
+0.78
+);
+
+if(character==="PORT"){
+
+state.portImage=data;
+
+showImage(
+"PORT",
+data
+);
+
+}else{
+
+state.mayImage=data;
+
+showImage(
+"MAY",
+data
+);
+
+}
+
+saveReferenceState();
+
+};
+
+img.src=e.target.result;
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+
+/* =====================================================
+SHOW IMAGE
+===================================================== */
+
+function showImage(character,data){
+
+let img=
+character==="PORT"
+?document.getElementById("portPreview")
+:document.getElementById("mayPreview");
+
+let status=
+character==="PORT"
+?document.getElementById("portRefStatus")
+:document.getElementById("mayRefStatus");
+
+img.src=data;
+img.style.display="block";
+
+status.innerHTML=
+'<span class="good">✓ MASTER REFERENCE LOCKED</span>';
+
+}
+
+
+/* =====================================================
+SAVE REFERENCE
+===================================================== */
+
+function saveReferenceState(){
+
+localStorage.setItem(
+"AI_DRAMA_V3_REFERENCES",
+JSON.stringify(state)
+);
+
+}
+
+
+/* =====================================================
+LOAD REFERENCE
+===================================================== */
+
+function loadReferences(){
+
+let saved=
+localStorage.getItem(
+"AI_DRAMA_V3_REFERENCES"
+);
+
+if(!saved)return;
+
+state=JSON.parse(saved);
+
+if(state.portImage)
+showImage("PORT",state.portImage);
+
+if(state.mayImage)
+showImage("MAY",state.mayImage);
+
+}
+
+
+/* =====================================================
+CHARACTER LOCK
+===================================================== */
+
+function saveCharacters(){
+
+let data={
+
+portID:
+document.getElementById("portID").value,
+
+portBible:
+document.getElementById("portBible").value,
+
+mayID:
+document.getElementById("mayID").value,
+
+mayBible:
+document.getElementById("mayBible").value
+
+};
+
+localStorage.setItem(
+"AI_DRAMA_V3_CHARACTERS",
+JSON.stringify(data)
+);
+
+document.getElementById(
+"characterStatus"
+).innerHTML=
+'<span class="good">✓ PORT + MAY Character Master ถูกบันทึก</span>';
+
+}
+
+
+/* =====================================================
+LOAD CHARACTERS
+===================================================== */
+
+function loadCharacters(){
+
+let saved=
+localStorage.getItem(
+"AI_DRAMA_V3_CHARACTERS"
+);
+
+if(!saved)return;
+
+let data=JSON.parse(saved);
+
+document.getElementById("portID").value=
+data.portID || "PORT";
+
+document.getElementById("portBible").value=
+data.portBible || "";
+
+document.getElementById("mayID").value=
+data.mayID || "MAY";
+
+document.getElementById("mayBible").value=
+data.mayBible || "";
+
+}
+
+
+/* =====================================================
+BUILD CHARACTER BLOCK
+===================================================== */
+
+function getCharacterBlock(){
+
+let port=
+document.getElementById("portBible").value;
+
+let may=
+document.getElementById("mayBible").value;
+
+return `
+PORT CHARACTER MASTER
+ID: ${document.getElementById("portID").value}
+
+${port}
+
+MAY CHARACTER MASTER
+ID: ${document.getElementById("mayID").value}
+
+${may}
+`;
+
+}
+
+
+/* =====================================================
+BUILD CLIP
+===================================================== */
+
+function buildClip(){
+
+let speaker=
+document.getElementById("speaker").value;
+
+let listener=
+speaker==="MAY"
+?"PORT"
+:"MAY";
+
+let duration=
+Number(document.getElementById("duration").value);
+
+let ratio=
+document.getElementById("ratio").value;
+
+let camera=
+document.getElementById("camera").value;
+
+let dialogue=
+document.getElementById("dialogue").value;
+
+let performance=
+document.getElementById("performance").value;
+
+let portPos=
+document.getElementById("portPosition").value;
+
+let mayPos=
+document.getElementById("mayPosition").value;
+
+
+/* REFERENCE LOGIC */
+
+let refs=[];
+
+if(state.portImage)
+refs.push("PORT MASTER REFERENCE");
+
+if(state.mayImage)
+refs.push("MAY MASTER REFERENCE");
+
+refs.push("SCENE REFERENCE");
+
+
+/* FLOW PACKAGE */
+
+let referenceText=`
+
+REFERENCE PACKAGE
+
+Use the selected reference images as visual references.
+
+Required references:
+${refs.join("\n")}
+
+Reference priority:
+1. Character identity
+2. Clothing and appearance
+3. Scene composition
+4. Environment
+`;
+
+document.getElementById(
+"referencePackage"
+).textContent=
+referenceText;
+
+
+/* PROMPT */
+
+let prompt=`
+
+Create a ${duration}-second ${ratio} cinematic video.
+
+CHARACTER CONTINUITY:
+Use the established fictional characters from the supplied reference images.
+
+Do not redesign or replace the characters.
+
+${getCharacterBlock()}
+
+SCENE:
+${document.getElementById("sceneName").value}
+
+LOCATION:
+${document.getElementById("location").value}
+
+TIME:
+${document.getElementById("time").value}
+
+LIGHTING:
+${document.getElementById("lighting").value}
+
+BLOCKING:
+PORT remains on the ${portPos.toLowerCase()} side.
+MAY remains on the ${mayPos.toLowerCase()} side.
+
+Both characters face each other naturally.
+
+SPEAKER:
+${speaker} is the only speaker.
+
+DIALOGUE:
+"${dialogue}"
+
+${speaker} speaks the Thai dialogue naturally with audible Thai speech and synchronized mouth movement.
+
+LISTENER:
+${listener} remains silent and listens naturally.
+${listener} does not speak.
+
+PERFORMANCE:
+${performance}
+
+CAMERA:
+${camera}.
+
+Natural human conversation.
+Natural blinking.
+Natural breathing.
+Subtle facial expressions.
+Subtle head movement.
+Realistic conversational timing.
+
+Do not swap positions.
+Do not flip the camera.
+Do not add characters.
+Do not change identity.
+Do not change clothing.
+Do not create exaggerated robotic movements.
+
+Cinematic photorealistic Thai drama.
+`;
+
+
+/* OUTPUT */
+
+document.getElementById(
+"flowPrompt"
+).textContent=
+prompt;
+
+state.clipBuilt=true;
+
+runPreflight();
+
+}
+
+
+/* =====================================================
+PREFLIGHT
+===================================================== */
+
+function runPreflight(){
+
+let speaker=
+document.getElementById("speaker").value;
+
+let duration=
+Number(document.getElementById("duration").value);
+
+let checks=[];
+
+checks.push(
+duration<=10
+?"✓ Duration within 10 seconds"
+:"⚠ Duration exceeds 10 seconds"
+);
+
+checks.push(
+state.portImage
+?"✓ PORT Master Reference"
+:"⚠ PORT Master Reference missing"
+);
+
+checks.push(
+state.mayImage
+?"✓ MAY Master Reference"
+:"⚠ MAY Master Reference missing"
+);
+
+checks.push(
+speaker==="MAY"
+?"✓ MAY = Speaker"
+:"✓ PORT = Speaker"
+);
+
+checks.push(
+speaker==="MAY"
+?"✓ PORT = Listener"
+:"✓ MAY = Listener"
+);
+
+checks.push(
+"✓ Blocking locked"
+);
+
+checks.push(
+"✓ Character continuity included"
+);
+
+checks.push(
+"✓ Natural performance instructions included"
+);
+
+let html=
+checks.map(function(item){
+
+let good=item.startsWith("✓");
+
+return `
+<div class="badge ${good?"good":"warn"}">
+${item}
+</div>
+`;
+
+}).join("");
+
+document.getElementById(
+"preflight"
+).innerHTML=
+html;
+
+
+/* CONTINUITY */
+
+document.getElementById(
+"continuityCheck"
+).innerHTML=`
+
+<span class="badge">PORT: ${document.getElementById("portPosition").value}</span>
+
+<span class="badge">MAY: ${document.getElementById("mayPosition").value}</span>
+
+<span class="badge">Speaker: ${speaker}</span>
+
+<span class="badge">
+Listener: ${speaker==="MAY"?"PORT":"MAY"}
+</span>
+
+<span class="badge">
+Duration: ${document.getElementById("duration").value}s
+</span>
+
+`;
+
+}
+
+
+/* =====================================================
+COPY
+===================================================== */
+
+function copyPrompt(){
+
+let text=
+document.getElementById(
+"flowPrompt"
+).textContent;
+
+if(
+navigator.clipboard &&
+navigator.clipboard.writeText
+){
+
+navigator.clipboard
+.writeText(text)
+.then(function(){
+
+alert(
+"✓ FLOW PROMPT COPIED"
+);
+
+});
+
+}else{
+
+alert(
+"กดค้างที่ข้อความแล้วเลือกคัดลอก"
+);
+
+}
+
+}
+
+
+/* =====================================================
+OPEN FLOW
+===================================================== */
+
+function openFlow(){
+
+window.open(
+"https://labs.google/fx/tools/flow",
+"_blank"
+);
+
+}
+
+
+/* =====================================================
+SAVE PROJECT
+===================================================== */
+
+function saveProject(){
+
+let data={};
+
+document
+.querySelectorAll(
+"input,textarea,select"
+)
+.forEach(function(el){
+
+if(el.type!=="file"){
+
+data[el.id]=el.value;
+
+}
+
+});
+
+data.state=state;
+
+localStorage.setItem(
+"AI_DRAMA_V3_PROJECT",
+JSON.stringify(data)
+);
+
+document.getElementById(
+"projectStatus"
+).innerHTML=
+'<span class="good">✓ Project V3 saved</span>';
+
+}
+
+
+/* =====================================================
+LOAD PROJECT
+===================================================== */
+
+function loadProject(){
+
+let saved=
+localStorage.getItem(
+"AI_DRAMA_V3_PROJECT"
+);
+
+if(!saved){
+
+document.getElementById(
+"projectStatus"
+).textContent=
+"ยังไม่มี Project ที่บันทึกไว้";
+
+return;
+
+}
+
+let data=JSON.parse(saved);
+
+Object.keys(data).forEach(function(key){
+
+let el=
+document.getElementById(key);
+
+if(el){
+
+el.value=data[key];
+
+}
+
+});
+
+if(data.state){
+
+state=data.state;
+
+if(state.portImage)
+showImage("PORT",state.portImage);
+
+if(state.mayImage)
+showImage("MAY",state.mayImage);
+
+}
+
+document.getElementById(
+"projectStatus"
+).innerHTML=
+'<span class="good">✓ Project V3 loaded</span>';
+
+runPreflight();
+
+}
+
+
+/* =====================================================
+CLIP STATUS
+===================================================== */
+
+function saveClipStatus(){
+
+let data={
+project:
+document.getElementById("project").value,
+
+scene:
+document.getElementById("scene").value,
+
+clip:
+document.getElementById("clip").value,
+
+status:
+document.getElementById("clipStatus").value,
+
+take:
+document.getElementById("take").value,
+
+updated:
+new Date().toLocaleString()
+};
+
+localStorage.setItem(
+"AI_DRAMA_V3_CLIP_STATUS",
+JSON.stringify(data)
+);
+
+document.getElementById(
+"tracker"
+).innerHTML=
+`
+<span class="badge">Project: ${data.project}</span>
+<span class="badge">Scene: ${data.scene}</span>
+<span class="badge">Clip: ${data.clip}</span>
+<span class="badge">Status: ${data.status}</span>
+<span class="badge">Take: ${data.take}</span>
+`;
+
+}
+
+
+/* =====================================================
+START
+===================================================== */
+
+loadCharacters();
+loadReferences();
+
+</script>
+
+</body>
+</html>
