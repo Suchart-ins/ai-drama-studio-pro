@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Drama Studio PRO V2.2</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial,"Noto Sans Thai",sans-serif;
+background:#090f1f;
+color:#fff
+}
+
+header{
+padding:18px;
+background:linear-gradient(135deg,#182346,#0c1328);
+border-bottom:1px solid #303d60
+}
+
+h1{
+margin:0;
+font-size:22px
+}
+
+.sub{
+margin-top:5px;
+font-size:12px;
+color:#aeb9d8
+}
+
+main{
+max-width:920px;
+margin:auto;
+padding:14px
+}
+
+.card{
+background:#121a2e;
+border:1px solid #293654;
+border-radius:16px;
+padding:15px;
+margin-bottom:14px
+}
+
+h2{
+font-size:17px;
+margin-top:0
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
+
+@media(max-width:600px){
+.grid{
+grid-template-columns:1fr
+}
+}
+
+label{
+display:block;
+font-size:13px;
+color:#b9c4df
+}
+
+input,select,textarea{
+width:100%;
+margin-top:6px;
+margin-bottom:10px;
+padding:10px;
+border-radius:10px;
+border:1px solid #394666;
+background:#070d1c;
+color:#fff;
+font-size:14px
+}
+
+textarea{
+min-height:100px;
+resize:vertical
+}
+
+button{
+border:0;
+border-radius:10px;
+padding:10px 13px;
+margin:3px;
+background:#5368ff;
+color:#fff;
+font-weight:bold
+}
+
+button.secondary{
+background:#293653
+}
+
+button.danger{
+background:#8b3040
+}
+
+.prompt{
+white-space:pre-wrap;
+background:#060b16;
+border:1px solid #303c5d;
+border-radius:10px;
+padding:13px;
+font-size:13px;
+line-height:1.6
+}
+
+.badge{
+display:inline-block;
+padding:6px 9px;
+margin:3px;
+border-radius:20px;
+background:#1d2945;
+color:#c4d0ef;
+font-size:11px
+}
+
+.good{
+color:#8ee6ad
+}
+
+.warn{
+color:#ffd27a
+}
+
+.reference{
+border:1px solid #34415f;
+border-radius:12px;
+padding:12px;
+margin-top:10px
+}
+
+.reference img{
+width:100%;
+max-height:260px;
+object-fit:contain;
+border-radius:10px;
+background:#050914;
+display:none;
+margin-top:8px
+}
+
+.lock{
+border-left:4px solid #6577ff
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🎬 AI Drama Studio PRO V2.2</h1>
+<div class="sub">
+Character Reference Lock • Character Bible • Continuity • Google Flow
+</div>
+</header>
+
+<main>
+
+<!-- PROJECT -->
+
+<div class="card">
+
+<h2>📁 PROJECT</h2>
+
+<div class="grid">
+
+<label>
+Project
+<input id="project" value="รอยรักรอยพยาบาท">
+</label>
+
+<label>
+Season
+<input id="season" value="1">
+</label>
+
+<label>
+Episode
+<input id="episode" value="1">
+</label>
+
+<label>
+Scene
+<input id="scene" value="1.1">
+</label>
+
+<label>
+Clip
+<input id="clip" value="1.1A">
+</label>
+
+</div>
+
+<button onclick="saveProject()">💾 บันทึก Project</button>
+
+<button class="secondary" onclick="loadProject()">
+📂 โหลด Project
+</button>
+
+<div id="status" class="good">
+สถานะ: พร้อมใช้งาน
+</div>
+
+</div>
+
+
+<!-- REFERENCE LOCK -->
+
+<div class="card lock">
+
+<h2>🖼️ CHARACTER REFERENCE LOCK</h2>
+
+<p class="warn">
+ใช้ภาพ Reference เดิมของตัวละครซ้ำทุก Scene เพื่อช่วยรักษาใบหน้าและรูปลักษณ์ให้คงที่
+</p>
+
+<div class="grid">
+
+<div class="reference">
+
+<h3>PORT — พอร์ต</h3>
+
+<input
+type="file"
+id="portReference"
+accept="image/*"
+onchange="loadReference('PORT')"
+>
+
+<img id="portPreview">
+
+<div id="portRefStatus">
+ยังไม่มี Reference
+</div>
+
+</div>
+
+
+<div class="reference">
+
+<h3>MAY — เมย์</h3>
+
+<input
+type="file"
+id="mayReference"
+accept="image/*"
+onchange="loadReference('MAY')"
+>
+
+<img id="mayPreview">
+
+<div id="mayRefStatus">
+ยังไม่มี Reference
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- CHARACTER BIBLE -->
+
+<div class="card">
+
+<h2>🔒 CHARACTER BIBLE</h2>
+
+<div class="grid">
+
+<div>
+
+<h3>PORT</h3>
+
+<label>รูปร่าง</label>
+<textarea id="portBody">
+ชายไทย อายุ 30 ปี สูง 185 ซม. รูปร่างสมส่วนแบบนักธุรกิจ
+</textarea>
+
+<label>ใบหน้า</label>
+<textarea id="portFace">
+ใบหน้าคม สันกรามชัด ใบหน้าหล่อแบบชายไทย ดวงตาสีเข้ม
+</textarea>
+
+<label>ผม</label>
+<textarea id="portHair">
+Comma Hair สี Jet Black ผมสั้นเรียบร้อย
+</textarea>
+
+<label>เสื้อผ้า</label>
+<textarea id="portClothes">
+สูทสามชิ้นสีกรมท่า เสื้อเชิ้ตสีขาว เนกไทสีดำ รองเท้าหนังสีดำ
+</textarea>
+
+<label>Identity Lock</label>
+<textarea id="portLock">
+ห้ามเปลี่ยนใบหน้า โครงหน้า ทรงผม สีผม รูปร่าง อายุ และชุดหลัก
+</textarea>
+
+</div>
+
+
+<div>
+
+<h3>MAY</h3>
+
+<label>รูปร่าง</label>
+<textarea id="mayBody">
+หญิงไทย อายุ 27 ปี สูง 162 ซม. รูปร่างเพรียว
+</textarea>
+
+<label>ใบหน้า</label>
+<textarea id="mayFace">
+ใบหน้าหวานละมุน ดวงตาสีน้ำตาล
+</textarea>
+
+<label>ผม</label>
+<textarea id="mayHair">
+ผมยาวประไหล่ สีน้ำตาลอ่อนคาราเมล มีหน้าม้าซีทรู
+</textarea>
+
+<label>เสื้อผ้า</label>
+<textarea id="mayClothes">
+เดรสราตรีสีพาสเทลลายดอกไม้เล็กๆ รองเท้าส้นสูง
+</textarea>
+
+<label>Identity Lock</label>
+<textarea id="mayLock">
+ห้ามเปลี่ยนใบหน้า โครงหน้า ทรงผม สีผม รูปร่าง อายุ และชุดหลัก
+</textarea>
+
+</div>
+
+</div>
+
+<button onclick="saveCharacters()">
+🔒 บันทึก Character Lock
+</button>
+
+</div>
+
+
+<!-- SCENE -->
+
+<div class="card">
+
+<h2>🎬 SCENE CONTINUITY</h2>
+
+<div class="grid">
+
+<label>
+สถานที่
+<input id="location"
+value="Luxury 5-star hotel ballroom">
+</label>
+
+<label>
+เวลา
+<input id="time"
+value="Night">
+</label>
+
+<label>
+PORT Position
+<select id="portPosition">
+<option>LEFT</option>
+<option>RIGHT</option>
+</select>
+</label>
+
+<label>
+MAY Position
+<select id="mayPosition">
+<option>RIGHT</option>
+<option>LEFT</option>
+</select>
+</label>
+
+</div>
+
+<label>
+Action / Emotion
+</label>
+
+<textarea id="action">
+เมย์ยืนใกล้พอร์ตอย่างออดอ้อน
+พอร์ตนิ่ง สุขุม และแฝงความเจ็บปวด
+บรรยากาศงานเลี้ยงหรูแต่มีความตึงเครียดซ่อนอยู่
+</textarea>
+
+</div>
+
+
+<!-- DIALOGUE -->
+
+<div class="card">
+
+<h2>🗣️ SPEAKER & LIP SYNC LOCK</h2>
+
+<div class="grid">
+
+<label>
+Speaker
+<select id="speaker">
+<option>PORT</option>
+<option>MAY</option>
+</select>
+</label>
+
+<label>
+Duration
+<input
+id="duration"
+type="number"
+min="1"
+max="10"
+value="7"
+>
+</label>
+
+</div>
+
+<label>
+Thai Dialogue
+</label>
+
+<textarea id="dialogue">
+พอร์ตคะ คืนนี้คุณพ่อจะประกาศเรื่องงานหมั้นของเราแล้วนะคะ
+</textarea>
+
+<button onclick="generate()">
+✨ Generate Prompt
+</button>
+
+<button class="secondary"
+onclick="copyPrompt()">
+📋 Copy Video Prompt
+</button>
+
+</div>
+
+
+<!-- IMAGE PROMPT -->
+
+<div class="card">
+
+<h2>🖼️ IMAGE PROMPT</h2>
+
+<div id="imagePrompt" class="prompt">
+กด Generate Prompt
+</div>
+
+</div>
+
+
+<!-- VIDEO PROMPT -->
+
+<div class="card">
+
+<h2>🎥 VIDEO PROMPT — GOOGLE FLOW</h2>
+
+<div id="videoPrompt" class="prompt">
+กด Generate Prompt
+</div>
+
+</div>
+
+
+<!-- CHECK -->
+
+<div class="card">
+
+<h2>🛡️ PRE-FLIGHT CHECK</h2>
+
+<div id="checks"></div>
+
+</div>
+
+</main>
+
+
+<script>
+
+/* ==============================
+REFERENCE STORAGE
+============================== */
+
+let references={
+PORT:"",
+MAY:""
+};
+
+
+/* ==============================
+LOAD SAVED REFERENCES
+============================== */
+
+function loadReferences(){
+
+let saved=
+localStorage.getItem(
+"AI_DRAMA_REFERENCE_V22"
+);
+
+if(saved){
+
+references=JSON.parse(saved);
+
+if(references.PORT){
+
+showReference("PORT",references.PORT);
+
+}
+
+if(references.MAY){
+
+showReference("MAY",references.MAY);
+
+}
+
+}
+
+}
+
+
+/* ==============================
+RESIZE IMAGE
+============================== */
+
+function loadReference(character){
+
+let input=
+character==="PORT"
+?document.getElementById("portReference")
+:document.getElementById("mayReference");
+
+let file=input.files[0];
+
+if(!file)return;
+
+let reader=new FileReader();
+
+reader.onload=function(e){
+
+let img=new Image();
+
+img.onload=function(){
+
+let max=700;
+
+let scale=
+Math.min(1,max/img.width,max/img.height);
+
+let canvas=
+document.createElement("canvas");
+
+canvas.width=
+Math.round(img.width*scale);
+
+canvas.height=
+Math.round(img.height*scale);
+
+let ctx=
+canvas.getContext("2d");
+
+ctx.drawImage(
+img,
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+let data=
+canvas.toDataURL(
+"image/jpeg",
+0.72
+);
+
+references[character]=data;
+
+localStorage.setItem(
+"AI_DRAMA_REFERENCE_V22",
+JSON.stringify(references)
+);
+
+showReference(character,data);
+
+};
+
+img.src=e.target.result;
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+
+/* ==============================
+SHOW REFERENCE
+============================== */
+
+function showReference(character,data){
+
+let preview=
+character==="PORT"
+?document.getElementById("portPreview")
+:document.getElementById("mayPreview");
+
+let status=
+character==="PORT"
+?document.getElementById("portRefStatus")
+:document.getElementById("mayRefStatus");
+
+preview.src=data;
+
+preview.style.display="block";
+
+status.innerHTML=
+'<span class="good">✓ Reference LOCKED</span>';
+
+}
+
+
+/* ==============================
+CHARACTER LOCK
+============================== */
+
+function getPortLock(){
+
+return `
+PORT — พอร์ต
+
+Body:
+${document.getElementById("portBody").value}
+
+Face:
+${document.getElementById("portFace").value}
+
+Hair:
+${document.getElementById("portHair").value}
+
+Clothing:
+${document.getElementById("portClothes").value}
+
+IDENTITY LOCK:
+${document.getElementById("portLock").value}
+`;
+
+}
+
+
+function getMayLock(){
+
+return `
+MAY — เมย์
+
+Body:
+${document.getElementById("mayBody").value}
+
+Face:
+${document.getElementById("mayFace").value}
+
+Hair:
+${document.getElementById("mayHair").value}
+
+Clothing:
+${document.getElementById("mayClothes").value}
+
+IDENTITY LOCK:
+${document.getElementById("mayLock").value}
+`;
+
+}
+
+
+/* ==============================
+GENERATE
+============================== */
+
+function generate(){
+
+let speaker=
+document.getElementById("speaker").value;
+
+let listener=
+speaker==="MAY"
+?"PORT"
+:"MAY";
+
+let duration=
+Number(document.getElementById("duration").value);
+
+let portLock=
+getPortLock();
+
+let mayLock=
+getMayLock();
+
+
+let imagePrompt=`
+
+VERTICAL 9:16 CINEMATIC REFERENCE IMAGE
+
+IMPORTANT:
+The two original fictional characters below must remain visually consistent.
+
+PRIMARY REFERENCE RULE:
+If reference images are attached, use them as the primary visual identity reference for each character.
+
+PORT REFERENCE:
+Use the exact PORT reference image for PORT's face, facial structure, hairstyle and overall identity.
+
+${portLock}
+
+MAY REFERENCE:
+Use the exact MAY reference image for MAY's face, facial structure, hairstyle and overall identity.
+
+${mayLock}
+
+SCENE:
+${document.getElementById("location").value}
+
+TIME:
+${document.getElementById("time").value}
+
+BLOCKING:
+
+PORT = ${document.getElementById("portPosition").value}
+
+MAY = ${document.getElementById("mayPosition").value}
+
+Both characters face each other.
+
+Maintain direct eye contact.
+
+Medium two-shot.
+
+No camera flip.
+
+No position swapping.
+
+No character replacement.
+
+ACTION:
+
+${document.getElementById("action").value}
+
+Both characters begin with their mouths closed.
+
+Photorealistic cinematic drama.
+Warm elegant lighting.
+Natural proportions.
+Original fictional characters only.
+`;
+
+
+let videoPrompt=`
+
+${duration} seconds.
+Vertical 9:16 cinematic video.
+
+CHARACTER REFERENCE LOCK:
+
+Use the attached PORT reference image as the exact identity reference for PORT.
+
+Use the attached MAY reference image as the exact identity reference for MAY.
+
+Do not redesign either character.
+
+Do not replace either character.
+
+Do not change either face.
+
+Do not change hairstyle.
+
+Do not change hair color.
+
+Do not change body proportions.
+
+Do not change clothing.
+
+PORT CHARACTER:
+
+${portLock}
+
+MAY CHARACTER:
+
+${mayLock}
+
+
+BLOCKING:
+
+PORT remains on the ${document.getElementById("portPosition").value.toLowerCase()} side.
+
+MAY remains on the ${document.getElementById("mayPosition").value.toLowerCase()} side.
+
+Both characters face each other.
+
+Maintain direct eye contact.
+
+No camera flip.
+
+No position swap.
+
+No character transformation.
+
+
+SPEAKER LOCK:
+
+${speaker} is the ONLY character who speaks.
+
+Thai dialogue:
+
+"${document.getElementById("dialogue").value}"
+
+${speaker} moves the mouth naturally and performs synchronized Thai lip movement for the dialogue.
+
+
+LISTENER LOCK:
+
+${listener} is completely silent.
+
+${listener}'s mouth remains firmly closed.
+
+${listener} does not move the lips.
+
+${listener} only listens and reacts naturally.
+
+
+CAMERA:
+
+Static medium two-shot.
+
+Stable framing.
+
+No camera flip.
+
+No sudden angle change.
+
+No character replacement.
+
+
+STYLE:
+
+Photorealistic cinematic drama.
+
+Warm elegant ballroom lighting.
+
+Natural realistic human movement.
+
+Maintain exact character identity throughout the entire clip.
+`;
+
+
+document.getElementById(
+"imagePrompt"
+).textContent=imagePrompt;
+
+document.getElementById(
+"videoPrompt"
+).textContent=videoPrompt;
+
+runChecks();
+
+}
+
+
+/* ==============================
+CHECKS
+============================== */
+
+function runChecks(){
+
+let duration=
+Number(document.getElementById("duration").value);
+
+let html="";
+
+if(duration<=10){
+
+html+=
+'<span class="badge">✓ Duration ≤ 10s</span>';
+
+}else{
+
+html+=
+'<span class="badge" style="background:#7d2735">⚠ เกิน 10s</span>';
+
+}
+
+if(references.PORT){
+
+html+=
+'<span class="badge">✓ PORT Reference LOCK</span>';
+
+}else{
+
+html+=
+'<span class="badge">⚠ ยังไม่มี PORT Reference</span>';
+
+}
+
+if(references.MAY){
+
+html+=
+'<span class="badge">✓ MAY Reference LOCK</span>';
+
+}else{
+
+html+=
+'<span class="badge">⚠ ยังไม่มี MAY Reference</span>';
+
+}
+
+html+=
+'<span class="badge">✓ Both Character Lock</span>';
+
+html+=
+'<span class="badge">✓ Blocking Lock</span>';
+
+html+=
+'<span class="badge">✓ Eye Contact Lock</span>';
+
+html+=
+'<span class="badge">✓ Speaker Lock</span>';
+
+html+=
+'<span class="badge">✓ Listener Mouth Closed</span>';
+
+document.getElementById(
+"checks"
+).innerHTML=html;
+
+}
+
+
+/* ==============================
+SAVE CHARACTERS
+============================== */
+
+function saveCharacters(){
+
+let data={};
+
+document
+.querySelectorAll(
+"#portBody,#portFace,#portHair,#portClothes,#portLock,#mayBody,#mayFace,#mayHair,#mayClothes,#mayLock"
+)
+.forEach(function(el){
+
+data[el.id]=el.value;
+
+});
+
+localStorage.setItem(
+"AI_DRAMA_CHARACTERS_V22",
+JSON.stringify(data)
+);
+
+alert("Character Lock บันทึกแล้ว ✓");
+
+}
+
+
+/* ==============================
+LOAD CHARACTERS
+============================== */
+
+function loadCharacters(){
+
+let saved=
+localStorage.getItem(
+"AI_DRAMA_CHARACTERS_V22"
+);
+
+if(!saved)return;
+
+let data=JSON.parse(saved);
+
+Object.keys(data).forEach(function(key){
+
+let el=document.getElementById(key);
+
+if(el){
+
+el.value=data[key];
+
+}
+
+});
+
+}
+
+
+/* ==============================
+SAVE PROJECT
+============================== */
+
+function saveProject(){
+
+let data={};
+
+document
+.querySelectorAll(
+"input,textarea,select"
+)
+.forEach(function(el){
+
+if(
+el.type!=="file"
+){
+
+data[el.id]=el.value;
+
+}
+
+});
+
+data.references=references;
+
+localStorage.setItem(
+"AI_DRAMA_PROJECT_V22",
+JSON.stringify(data)
+);
+
+document.getElementById(
+"status"
+).textContent=
+"✓ Project + Character Reference ถูกบันทึกแล้ว";
+
+}
+
+
+/* ==============================
+LOAD PROJECT
+============================== */
+
+function loadProject(){
+
+let saved=
+localStorage.getItem(
+"AI_DRAMA_PROJECT_V22"
+);
+
+if(!saved){
+
+document.getElementById(
+"status"
+).textContent=
+"ยังไม่มี Project";
+
+return;
+
+}
+
+let data=JSON.parse(saved);
+
+Object.keys(data).forEach(function(key){
+
+let el=
+document.getElementById(key);
+
+if(el){
+
+el.value=data[key];
+
+}
+
+});
+
+if(data.references){
+
+references=data.references;
+
+if(references.PORT){
+
+showReference(
+"PORT",
+references.PORT
+);
+
+}
+
+if(references.MAY){
+
+showReference(
+"MAY",
+references.MAY
+);
+
+}
+
+}
+
+generate();
+
+document.getElementById(
+"status"
+).textContent=
+"✓ โหลด Project สำเร็จ";
+
+}
+
+
+/* ==============================
+COPY
+============================== */
+
+function copyPrompt(){
+
+let text=
+document.getElementById(
+"videoPrompt"
+).textContent;
+
+if(
+navigator.clipboard &&
+navigator.clipboard.writeText
+){
+
+navigator.clipboard
+.writeText(text)
+.then(function(){
+
+alert(
+"คัดลอก Video Prompt แล้ว ✓"
+);
+
+});
+
+}else{
+
+alert(
+"กดค้างที่ข้อความแล้วเลือกคัดลอก"
+);
+
+}
+
+}
+
+
+/* ==============================
+START
+============================== */
+
+loadCharacters();
+
+loadReferences();
+
+generate();
+
+</script>
+
+</body>
+</html>
